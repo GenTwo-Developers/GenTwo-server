@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: GenTwo
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /:
+    get:
+      summary: APIドキュメントを取得
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples: {}
+      operationId: get
+      description: APIドキュメントをHTML形式で取得します。
+      parameters: []
+  /user/profile:
+    get:
+      summary: 指定されたユーザーのプロフィール情報を返却する。
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  profile:
+                    $ref: '#/components/schemas/User'
+              examples: {}
+      operationId: get-user-profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+              required:
+                - userId
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      x-examples:
+        Alice Smith:
+          id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        birth:
+          type: string
+        followNumber:
+          type: integer
+        followersNumber:
+          type: integer
+        location:
+          type: string
+        bio:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
