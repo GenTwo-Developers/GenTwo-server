@@ -47,6 +47,7 @@ paths:
                   type: integer
               required:
                 - userId
+      description: 指定されたユーザーのプロフィール情報を返却します。
 components:
   schemas:
     User:
