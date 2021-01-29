@@ -21,9 +21,67 @@ paths:
       operationId: get
       description: APIドキュメントをHTML形式で取得します。
       parameters: []
-  /user/profile:
+  '/get/posts/{postId}':
+    parameters:
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
     get:
-      summary: 指定されたユーザーのプロフィール情報を返却する。
+      summary: 指定された投稿IDの投稿の詳細を取得する。
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  textBody:
+                    type: string
+                  reactions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        emoji:
+                          type: string
+                        user:
+                          $ref: '#/components/schemas/simpleUser'
+                  imageLink:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    textBody: 猫ちゃんかわいい
+                    reactions:
+                      - emoji: bowing_man
+                        user:
+                          id:
+                            id: Chaha1n
+                          bio: 豊田高専の２年生です。
+                          icon: 'https://iconserver.com/chaha1n'
+                    imageLink: 'https://imageserver/com/hash1'
+      operationId: get-posts-postId
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userId'
+            examples: {}
+  '/get/profile/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: 指定されたユーザーIDの詳細なプロフィール情報を返却する。
       tags: []
       responses:
         '200':
@@ -31,42 +89,39 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  profile:
-                    $ref: '#/components/schemas/User'
-              examples: {}
-      operationId: get-user-profile
+                $ref: '#/components/schemas/detailedUser'
+              examples:
+                chaha1n:
+                  value:
+                    id: chaha1n
+                    birth: '2002-07-18'
+                    followNumber: 10000
+                    followersNumber: 0
+                    location: NITTC
+                    bio: 自己紹介文
+                    createdAt: '1970-01-01'
+                    icon: 'https://iconserver.com/chaha1n'
+      operationId: get-get-profile-userId
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                userId:
-                  type: integer
-              required:
-                - userId
-      description: 指定されたユーザーのプロフィール情報を返却します。
+              $ref: '#/components/schemas/userId'
+            examples:
+              example-1:
+                value:
+                  id: chaha1n
 components:
   schemas:
-    User:
+    detailedUser:
       title: User
       type: object
       description: ''
-      x-examples:
-        Alice Smith:
-          id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
+      x-examples: {}
       properties:
         id:
-          type: integer
           description: Unique identifier for the given user.
+          type: string
         birth:
           type: string
         followNumber:
@@ -79,5 +134,26 @@ components:
           type: string
         createdAt:
           type: string
+        icon:
+          type: string
       required:
         - id
+    userId:
+      title: userId
+      type: object
+      properties:
+        id:
+          type: string
+      x-examples:
+        example-1:
+          id: string
+    simpleUser:
+      title: simpleUser
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/userId'
+        bio:
+          type: string
+        icon:
+          type: string
