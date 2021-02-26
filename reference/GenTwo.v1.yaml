@@ -39,24 +39,10 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  textBody:
-                    type: string
-                  reactions:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        emoji:
-                          type: string
-                        user:
-                          $ref: '#/components/schemas/userId'
-                  imageLink:
-                    type: string
               examples:
                 example-1:
                   value:
-                    textBody: 猫ちゃんかわいい
+                    textBody: Hello World
                     reactions:
                       - emoji: bowing_man
                         user:
@@ -164,7 +150,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/authUserModel'
+              type: object
+      description: WIP ログイン仕様を策定後に
+  /post/judgement/text:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-post-judgement-text
+      description: 投稿されたテキストがGenTwoに投稿可能かを判定します。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                '':
+                  type: string
+  /post/judgement/image:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-post-judgement-image
 components:
   schemas:
     detailedUserModel:
@@ -208,4 +216,10 @@ components:
         userId:
           type: string
         token:
+          type: string
+    post:
+      title: post
+      type: object
+      properties:
+        id:
           type: string
