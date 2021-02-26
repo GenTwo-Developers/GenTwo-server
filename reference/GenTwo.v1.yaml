@@ -21,7 +21,7 @@ paths:
       operationId: get
       description: APIドキュメントをHTML形式で取得します。
       parameters: []
-  '/get/posts/{postId}':
+  '/get/user/posts/{postId}':
     parameters:
       - schema:
           type: string
@@ -29,7 +29,7 @@ paths:
         in: path
         required: true
     get:
-      summary: 指定された投稿IDの投稿の詳細を取得する。
+      summary: '/get/posts/{postId}'
       tags: []
       responses:
         '200':
@@ -50,7 +50,7 @@ paths:
                         emoji:
                           type: string
                         user:
-                          $ref: '#/components/schemas/simpleUser'
+                          $ref: '#/components/schemas/userId'
                   imageLink:
                     type: string
               examples:
@@ -60,20 +60,22 @@ paths:
                     reactions:
                       - emoji: bowing_man
                         user:
-                          id:
-                            id: Chaha1n
+                          id: Chaha1n
                           bio: 豊田高専の２年生です。
                           icon: 'https://iconserver.com/chaha1n'
                     imageLink: 'https://imageserver/com/hash1'
       operationId: get-posts-postId
-      description: ''
+      description: 指定された投稿IDの投稿の詳細を取得する。
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/userId'
-            examples: {}
-  '/get/profile/{userId}':
+              type: object
+            examples:
+              example-1:
+                value: {}
+        description: ''
+  '/get/user/profile/{userId}':
     parameters:
       - schema:
           type: string
@@ -81,7 +83,7 @@ paths:
         in: path
         required: true
     get:
-      summary: 指定されたユーザーIDの詳細なプロフィール情報を返却する。
+      summary: '/get/profile/{userId}'
       tags: []
       responses:
         '200':
@@ -89,7 +91,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/detailedUser'
+                $ref: '#/components/schemas/detailedUserModel'
               examples:
                 chaha1n:
                   value:
@@ -102,19 +104,71 @@ paths:
                     createdAt: '1970-01-01'
                     icon: 'https://iconserver.com/chaha1n'
       operationId: get-get-profile-userId
+      description: 指定されたユーザーIDの詳細なプロフィール情報を返却する。
+  '/post/user/reaction/{postId}':
+    parameters:
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-post-user-reaction-postId
+      responses:
+        '200':
+          description: OK
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/userId'
-            examples:
-              example-1:
-                value:
-                  id: chaha1n
+              type: object
+              properties:
+                '':
+                  $ref: '#/components/schemas/authUserModel'
+                emojiId:
+                  type: string
+  /post/user/post:
+    post:
+      summary: ''
+      operationId: post-post-user-post
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '':
+                    type: string
+      description: 投稿を行います。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/authUserModel'
+                post:
+                  type: string
+  /login:
+    post:
+      summary: ''
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authUserModel'
 components:
   schemas:
-    detailedUser:
-      title: User
+    detailedUserModel:
+      title: detailedUser
       type: object
       description: ''
       x-examples: {}
@@ -147,13 +201,11 @@ components:
       x-examples:
         example-1:
           id: string
-    simpleUser:
-      title: simpleUser
+    authUserModel:
+      title: authUserModel
       type: object
       properties:
-        id:
-          $ref: '#/components/schemas/userId'
-        bio:
+        userId:
           type: string
-        icon:
+        token:
           type: string
