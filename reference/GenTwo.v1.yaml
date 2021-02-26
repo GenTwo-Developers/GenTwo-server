@@ -214,11 +214,13 @@ paths:
                 text:
                   type: string
   /post/judgement/image:
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-      operationId: get-post-judgement-image
+    post:
+      summary: ''
+      operationId: post-post-judgement-image
+      responses:
+        '200':
+          description: OK
+      description: 画像が投稿可能か判定します。
 components:
   schemas:
     detailedUserModel:
