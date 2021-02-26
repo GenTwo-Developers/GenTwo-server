@@ -40,7 +40,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/post'
               examples:
-                example-1:
+                投稿例:
                   value:
                     textBody: Hello World
                     reactions:
@@ -126,8 +126,23 @@ paths:
               schema:
                 type: object
                 properties:
-                  '':
-                    type: string
+                  posted:
+                    type: boolean
+                  banned:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                成功例:
+                  value:
+                    posted: true
+                    banned: []
+                失敗例:
+                  value:
+                    posted: false
+                    banned:
+                      - 人工地震
+                      - 陰謀
       description: 投稿を行います。
       requestBody:
         content:
@@ -139,6 +154,14 @@ paths:
                   $ref: '#/components/schemas/authUserModel'
                 post:
                   type: string
+            examples:
+              投稿例:
+                value:
+                  user:
+                    userId: kathmandu777
+                    token: aoPog39b312klm
+                  post: てかLINEやってる？笑
+        description: ''
   /login:
     post:
       summary: ''
@@ -153,19 +176,42 @@ paths:
               type: object
       description: WIP ログイン仕様を策定後に
   /post/judgement/text:
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-      operationId: get-post-judgement-text
-      description: 投稿されたテキストがGenTwoに投稿可能かを判定します。
+    post:
+      summary: ''
+      operationId: post-post-judgement-text
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  canPost:
+                    type: boolean
+                  banned:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                不適切な投稿例:
+                  value:
+                    canPost: false
+                    banned:
+                      - うんち
+                      - 汚い
+                適切な投稿:
+                  value:
+                    canPost: true
+                    banned: []
+      description: 渡されたテキストがGenTwoに投稿可能か判定する。
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                '':
+                text:
                   type: string
   /post/judgement/image:
     get:
@@ -222,7 +268,21 @@ components:
       type: object
       x-examples:
         example-1:
-          id: string
+          from:
+            id: Chaha1n
+            birth: string
+            followNumber: 0
+            followersNumber: 0
+            location: string
+            bio: string
+            createdAt: string
+            icon: string
+          post:
+            text: Hello GenTwo!
+            reactions:
+              - emoji: thinking
+                user:
+                  id: kathmandu
       properties:
         from:
           $ref: '#/components/schemas/detailedUserModel'
