@@ -1,0 +1,11 @@
+- /
+    - /users
+        - /{user_ID} (GET) 指定されたユーザのプロフィール情報を返却
+        - /update_profile (POST)　プロフィールの変更
+    - /tweets
+        - /{user_ID} (GET) 指定されたユーザの直近の投稿をn件取得
+        - /reaction
+            - /create     (POST) POSTされたデータから該当の投稿に反応をつける
+            - /revoke     (POST) createの逆、反応を取り消す。
+        - /update   (POST) 投稿を投稿
+        - /timeline (POST) 個人のタイムラインを取得(=フォローしているユーザー群の直近の投稿を取得)
