@@ -1,0 +1,304 @@
+openapi: 3.0.0
+info:
+  title: GenTwo
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /:
+    get:
+      summary: ''
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples: {}
+      operationId: get
+      description: APIドキュメントをHTML形式で取得します。
+      parameters: []
+  '/get/user/posts/{postId}':
+    parameters:
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+    get:
+      summary: '/get/posts/{postId}'
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/post'
+              examples:
+                投稿例:
+                  value:
+                    textBody: Hello World
+                    reactions:
+                      - emoji: bowing_man
+                        user:
+                          id: Chaha1n
+                          bio: 豊田高専の２年生です。
+                          icon: 'https://iconserver.com/chaha1n'
+                    imageLink: 'https://imageserver/com/hash1'
+      operationId: get-posts-postId
+      description: 指定された投稿IDの投稿の詳細を取得する。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples:
+              example-1:
+                value: {}
+        description: ''
+  '/get/user/profile/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: '/get/profile/{userId}'
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/detailedUserModel'
+              examples:
+                chaha1n:
+                  value:
+                    id: chaha1n
+                    birth: '2002-07-18'
+                    followNumber: 10000
+                    followersNumber: 0
+                    location: NITTC
+                    bio: 自己紹介文
+                    createdAt: '1970-01-01'
+                    icon: 'https://iconserver.com/chaha1n'
+      operationId: get-get-profile-userId
+      description: 指定されたユーザーIDの詳細なプロフィール情報を返却する。
+  '/post/user/reaction/{postId}':
+    parameters:
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-post-user-reaction-postId
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                '':
+                  $ref: '#/components/schemas/authUserModel'
+                emojiId:
+                  type: string
+  /post/user/post:
+    post:
+      summary: ''
+      operationId: post-post-user-post
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posted:
+                    type: boolean
+                  banned:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                成功例:
+                  value:
+                    posted: true
+                    banned: []
+                失敗例:
+                  value:
+                    posted: false
+                    banned:
+                      - 人工地震
+                      - 陰謀
+      description: 投稿を行います。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/authUserModel'
+                post:
+                  type: string
+            examples:
+              投稿例:
+                value:
+                  user:
+                    userId: kathmandu777
+                    token: aoPog39b312klm
+                  post: てかLINEやってる？笑
+        description: ''
+  /login:
+    post:
+      summary: ''
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      description: WIP ログイン仕様を策定後に
+  /post/judgement/text:
+    post:
+      summary: ''
+      operationId: post-post-judgement-text
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  canPost:
+                    type: boolean
+                  banned:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                不適切な投稿例:
+                  value:
+                    canPost: false
+                    banned:
+                      - うんち
+                      - 汚い
+                適切な投稿:
+                  value:
+                    canPost: true
+                    banned: []
+      description: 渡されたテキストがGenTwoに投稿可能か判定する。
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+  /post/judgement/image:
+    post:
+      summary: ''
+      operationId: post-post-judgement-image
+      responses:
+        '200':
+          description: OK
+      description: 画像が投稿可能か判定します。
+components:
+  schemas:
+    detailedUserModel:
+      title: detailedUser
+      type: object
+      description: ''
+      x-examples: {}
+      properties:
+        id:
+          description: Unique identifier for the given user.
+          type: string
+        birth:
+          type: string
+        followNumber:
+          type: integer
+        followersNumber:
+          type: integer
+        location:
+          type: string
+        bio:
+          type: string
+        createdAt:
+          type: string
+        icon:
+          type: string
+      required:
+        - id
+    userId:
+      title: userId
+      type: object
+      properties:
+        id:
+          type: string
+      x-examples:
+        example-1:
+          id: string
+    authUserModel:
+      title: authUserModel
+      type: object
+      properties:
+        userId:
+          type: string
+        token:
+          type: string
+    post:
+      title: post
+      type: object
+      x-examples:
+        example-1:
+          from:
+            id: Chaha1n
+            birth: string
+            followNumber: 0
+            followersNumber: 0
+            location: string
+            bio: string
+            createdAt: string
+            icon: string
+          post:
+            text: Hello GenTwo!
+            reactions:
+              - emoji: thinking
+                user:
+                  id: kathmandu
+      properties:
+        from:
+          $ref: '#/components/schemas/detailedUserModel'
+        post:
+          type: object
+          properties:
+            text:
+              type: string
+            reactions:
+              type: array
+              items:
+                type: object
+                properties:
+                  emoji:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/userId'
